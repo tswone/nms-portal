@@ -3,6 +3,7 @@
 // Writes persist to localStorage in the browser; on the server the seed data is used.
 
 import { needsAction } from "./checklist";
+import { seedOffsetDays, shiftDates } from "./seed-dates";
 import {
   seedBudget,
   seedChecklist,
@@ -52,12 +53,13 @@ interface Db {
   feedback: PortalFeedback[];
 }
 
-const STORAGE_KEY = "nms-portal:db:v10"; // bumped when the stored shape changes
+const STORAGE_KEY = "nms-portal:db:v11"; // bumped when the stored shape changes
 
 const clone = <T>(value: T): T => structuredClone(value);
 
+// Seed dates are re-anchored to today so the demo never goes stale (see seed-dates.ts).
 const seedDb = (): Db =>
-  clone({
+  clone(shiftDates<Db>({
     family: seedFamily,
     progress: seedProgress,
     budget: seedBudget,
@@ -70,7 +72,7 @@ const seedDb = (): Db =>
     pins: seedPins,
     visit: seedVisit,
     feedback: [],
-  });
+  }, seedOffsetDays()));
 
 let db: Db | null = null;
 

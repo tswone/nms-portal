@@ -83,3 +83,4 @@
     - fallback: Google Calendar + Google Meet (if NMS runs on Google Workspace)
         - read staff free/busy from Google Calendar, create the event with a Meet link via the Calendar API, write the meeting back to the Zoho record
     - either way: the portal's slot picker (mentor tab) stays the same UI; only getMentorAvailability / scheduleMeeting in lib/data.ts change
+- demo dates are re-anchored to today (whole-week shift from 2026-10-02, lib/seed-dates.ts) so overdue counts + upcoming events stay realistic whenever reviewers open it; text labels like "Fall 2026" / "2026–27" do not shift
