@@ -67,3 +67,12 @@
     - Get help: message your Family Advisor in-portal (same thread model as mentor messages, "replies within one business day"), plus info@ + contact page
     - Share feedback: 3-face rating (great / okay / frustrating), optional comment, "okay to contact me" (default on), records which page they were on
     - production: help messages -> Zoho ticket/advisor inbox; feedback -> a feedback table the product team reviews (tag by page + rating); close the loop with "you asked, we built" notes in the since-last-visit digest
+- full build-out tech stack (proposed):
+    - DB: Postgres on Neon — serverless, Vercel integration, branch-per-preview-deploy for safe testing with realistic data
+    - auth: Clerk — magic-link / passwordless for parents (no password resets), roles parent / staff / mentor (Clerk orgs or metadata), MFA required for staff; only parents get accounts, not Stars (COPPA: many Stars are under 13)
+    - ORM: Prisma — schema mirrors lib/types.ts, typed queries + migrations; good fit if the portal is the only app on this DB
+        - if other services/apps end up sharing the DB (staff tools, sync workers, analytics), revisit: a lighter query layer (Drizzle / Kysely) or a small API service in front of the DB so schema ownership is clear
+    - Zoho CRM + Ramp/QuickBooks stay source of truth; Neon is the portal's synced cache (see webhook notes above)
+        - Vercel Cron for scheduled syncs; webhook endpoints as Next.js route handlers; portal writes go to the Zoho API first
+    - swap is contained: lib/data.ts functions become server actions / route handlers backed by Prisma, UI components unchanged
+    - Q: hosting data in Neon/Clerk = more vendors holding family data — needs a data processing review alongside the privacy-notice question above

@@ -40,6 +40,20 @@ Two more pieces round out the relationship:
 - **Money** is stored as integer cents everywhere (`lib/money.ts`) to avoid floating-point errors.
 - **`components/portal/`** holds one component per tab or feature. `components/ui/` holds the generated shadcn primitives.
 
+## Production build-out (proposed)
+
+This prototype uses mock data in the browser. A full build would keep the same UI and replace `lib/data.ts` with real services:
+
+| Layer | Proposal | Why |
+|---|---|---|
+| Database | **Postgres on Neon** | Serverless Postgres with a first-class Vercel integration. Branching gives every preview deploy its own copy of the data |
+| Auth | **Clerk** | Easy sign-in for parents (email magic links, no passwords to forget). Roles for parent, staff and mentor, with MFA for staff |
+| ORM | **Prisma** | Typed schema and migrations that mirror `lib/types.ts`. A good fit while this portal is the only app using the database |
+| Source of truth | **Zoho CRM** (families, to-dos, staff), **Ramp/QuickBooks** (budget) | The portal's database is a synced cache; portal edits are written back through the Zoho API |
+| Sync | **Webhooks + scheduled refresh** (Vercel Cron) | Webhooks for fast-changing data (to-dos, RSVPs, messages) and a periodic full sync as a safety net |
+
+Only parents sign in; Stars, many of them under 13, don't get accounts. See `notes.md` for open questions.
+
 ## Run locally
 
 ```bash
