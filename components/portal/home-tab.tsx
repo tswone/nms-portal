@@ -105,6 +105,8 @@ export function HomeTab({
           item={next}
           star={star}
           openCount={open.length}
+          doneCount={checklist.length - open.length}
+          totalCount={checklist.length}
           onChange={onChecklistChange}
           onSchedule={onSchedule}
         />
@@ -271,12 +273,16 @@ function NextStep({
   item,
   star,
   openCount,
+  doneCount,
+  totalCount,
   onChange,
   onSchedule,
 }: {
   item: ChecklistItem | undefined;
   star: Star;
   openCount: number;
+  doneCount: number;
+  totalCount: number;
   onChange: () => void;
   onSchedule: () => void;
 }) {
@@ -306,7 +312,7 @@ function NextStep({
     <Card className="border-l-4 border-brand-gold [--card-spacing:--spacing(5)]">
       <CardHeader>
         <p className="text-xs font-semibold tracking-wide text-brand-gold uppercase">
-          Start here{openCount > 1 && ` · 1 of ${openCount}`}
+          Start here
         </p>
         <CardTitle className="text-xl font-semibold">{item.title}</CardTitle>
         <CardDescription className="text-base">{item.shortDesc}</CardDescription>
@@ -363,6 +369,16 @@ function NextStep({
             it&apos;s submitted.
           </p>
         )}
+        <div className="grid gap-1.5 border-t pt-4">
+          <Progress
+            value={percentOf(doneCount, totalCount)}
+            aria-label="To-dos done this year"
+            className="[&_[data-slot=progress-track]]:h-2"
+          />
+          <p className="text-xs text-muted-foreground">
+            {doneCount} of {totalCount} to-dos done this year · {openCount} left
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
@@ -392,17 +408,10 @@ function TodoList({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Then, when you have a minute</CardTitle>
-        <div className="mt-1 grid gap-1.5">
-          <Progress
-            value={percentOf(done.length, checklist.length)}
-            aria-label="Checklist progress"
-            className="[&_[data-slot=progress-track]]:h-2"
-          />
-          <p className="text-xs text-muted-foreground">
-            {done.length} of {checklist.length} done this year
-          </p>
-        </div>
+        <CardTitle>
+          The rest of your list{" "}
+          <span className="font-normal text-muted-foreground">({rest.length})</span>
+        </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-2">
         {rest.length === 0 && (

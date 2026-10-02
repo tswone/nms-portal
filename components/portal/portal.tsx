@@ -86,7 +86,7 @@ export function Portal() {
 
   return (
     <>
-      <SiteHeader parent={parent} />
+      <SiteHeader parent={parent} view="returning" />
 
       <section className="bg-brand-slate-light text-white">
         <div className="mx-auto max-w-6xl px-4 py-4 sm:py-5">

@@ -6,6 +6,8 @@ A self-service portal prototype for National Math Stars families, built as a two
 
 You're signed in as the Delgado family. Sofia is a 5th-grade Voyager Star in rural Ohio. All data is dummy data.
 
+To see what a brand-new family sees on day one (first steps, what happens next, empty states), use the **Demo** switch in the header or go to [/welcome](https://nms-portal.vercel.app/welcome).
+
 ## What a parent can do
 
 | Spec item | Where |
