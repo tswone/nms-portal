@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import {
   Award,
   GraduationCap,
@@ -17,7 +18,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { needsAction } from "@/lib/checklist";
 import { getChecklist, getFamily, getPins, recordVisit } from "@/lib/data";
 import { formatGrade, initials } from "@/lib/format";
-import type { ChecklistItem, Family, PortalArea } from "@/lib/types";
+import { TAB_PATHS, tabFromPath, type TabKey } from "@/lib/routes";
+import type { ChecklistItem, Family } from "@/lib/types";
 
 import { FamilyInfo } from "./family-info";
 import { HomeTab } from "./home-tab";
@@ -25,8 +27,6 @@ import { MentorTab } from "./mentor-tab";
 import { isNewPin, Pinbook } from "./pinbook";
 import { SiteHeader } from "./site-header";
 import { StarProgress } from "./star-progress";
-
-type TabKey = "home" | "pins" | Extract<PortalArea, "progress" | "mentor" | "family">;
 
 const TABS: { key: TabKey; label: string; short: string; icon: LucideIcon }[] = [
   { key: "home", label: "Home", short: "Home", icon: House },
@@ -40,17 +40,16 @@ export function Portal() {
   const [family, setFamily] = useState<Family | null>(null);
   const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [tab, setTabState] = useState<TabKey>(readTabFromUrl);
+  // Each tab has its own path (/mentor, /pinbook, …) so reminder emails can deep-link.
+  const tab = tabFromPath(usePathname());
   const [previousVisit, setPreviousVisit] = useState<string | null>(null);
   const [newPinCount, setNewPinCount] = useState(0);
 
-  // Keep the tab in the URL (?tab=mentor) so reminder emails can deep-link.
+  // pushState swaps the path without a reload (data stays loaded) and syncs with
+  // usePathname, so the browser back button moves between tabs.
   const setTab = useCallback((next: TabKey) => {
-    setTabState(next);
-    const url = new URL(window.location.href);
-    if (next === "home") url.searchParams.delete("tab");
-    else url.searchParams.set("tab", next);
-    window.history.replaceState(null, "", url);
+    const path = TAB_PATHS[next];
+    if (path !== window.location.pathname) window.history.pushState(null, "", path);
   }, []);
   const [scheduleOpen, setScheduleOpen] = useState(false);
 
@@ -188,14 +187,6 @@ export function Portal() {
       </main>
     </>
   );
-}
-
-const TAB_KEYS = new Set<string>(TABS.map((t) => t.key));
-
-function readTabFromUrl(): TabKey {
-  if (typeof window === "undefined") return "home";
-  const tab = new URLSearchParams(window.location.search).get("tab");
-  return tab && TAB_KEYS.has(tab) ? (tab as TabKey) : "home";
 }
 
 /** Small gold count on a tab. Never red: the portal informs, it doesn't alarm. */

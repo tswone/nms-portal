@@ -24,7 +24,7 @@ Two more pieces round out the relationship:
 
 ## Design notes
 
-- **Built for weekly or every-other-week visits.** Home leads with what's new since the last visit and a single next step. The current tab is in the URL (`?tab=mentor`), so reminder emails can link straight to it.
+- **Built for weekly or every-other-week visits.** Home leads with what's new since the last visit and a single next step. Each tab has its own path (`/mentor`, `/pinbook`, `/progress`, `/family`), so reminder emails can link straight to it.
 - **Calm by default.** There's one count badge, nothing is shown in red, and past-due items are stated plainly rather than as alarms.
 - **Aligned with nationalmathstars.org.** Voyager program details, Family Advisor and Math Mentor roles, and Midwest regions all match the site.
 
