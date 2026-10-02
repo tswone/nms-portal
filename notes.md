@@ -63,3 +63,7 @@
     - lib/data.ts is already shaped for this: every function is async, so swapping localStorage for API calls + a cache doesn't change the UI
 - connected portal <-> nationalmathstars.org: footer on every page (data pledge, Learn more links, Need help), plus in-context links (welcome page -> Voyager program + Star Stories; Mentor tab -> Meet the whole NMS team)
     - pledge wording only restates NMS's published privacy policy (no marketing sharing, parental consent under 13, privacy contact operations@) — Q: legal/ops should review; a portal holding grades + finances probably wants a portal-specific privacy notice (FERPA-adjacent school records, who on staff can see what)
+- help & feedback: "Help & feedback" button in the header on every page (icon-only on phones)
+    - Get help: message your Family Advisor in-portal (same thread model as mentor messages, "replies within one business day"), plus info@ + contact page
+    - Share feedback: 3-face rating (great / okay / frustrating), optional comment, "okay to contact me" (default on), records which page they were on
+    - production: help messages -> Zoho ticket/advisor inbox; feedback -> a feedback table the product team reviews (tag by page + rating); close the loop with "you asked, we built" notes in the since-last-visit digest

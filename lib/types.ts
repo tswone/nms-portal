@@ -255,3 +255,16 @@ export interface VisitInfo {
   previous: ISODateTime | null;
   current: ISODateTime;
 }
+
+// --- Portal feedback ---
+
+export type FeedbackRating = "great" | "okay" | "frustrating";
+
+export interface PortalFeedback {
+  id: string;
+  rating: FeedbackRating;
+  comment: string;
+  canContact: boolean;
+  page: string; // where they were when they sent it
+  submittedAt: ISODateTime;
+}

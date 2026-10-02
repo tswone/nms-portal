@@ -30,6 +30,7 @@ import type {
   Parent,
   Pin,
   PortalEvent,
+  PortalFeedback,
   StaffFollowUp,
   Star,
   StarProgress,
@@ -48,9 +49,10 @@ interface Db {
   events: PortalEvent[];
   pins: Pin[];
   visit: VisitInfo;
+  feedback: PortalFeedback[];
 }
 
-const STORAGE_KEY = "nms-portal:db:v9"; // bumped when the stored shape changes
+const STORAGE_KEY = "nms-portal:db:v10"; // bumped when the stored shape changes
 
 const clone = <T>(value: T): T => structuredClone(value);
 
@@ -67,6 +69,7 @@ const seedDb = (): Db =>
     events: seedEvents,
     pins: seedPins,
     visit: seedVisit,
+    feedback: [],
   });
 
 let db: Db | null = null;
@@ -404,6 +407,32 @@ export function recordVisit(): Promise<VisitInfo> {
     persist();
   }
   return respond(data.visit);
+}
+
+// --- Help & feedback ---
+
+/** The family's Family Advisor — their first stop for help. */
+export function getFamilyAdvisor(): Promise<Mentor | null> {
+  const today = todayISO();
+  const advisor = getDb().mentors.find(
+    (m) => !m.starId && m.title.startsWith("Family Advisor") && (!m.endDate || m.endDate >= today),
+  );
+  return respond(advisor ?? null);
+}
+
+/** Feedback about the portal itself. In production this lands in Zoho / a feedback inbox. */
+export function submitFeedback(
+  input: Omit<PortalFeedback, "id" | "submittedAt">,
+): Promise<PortalFeedback> {
+  const feedback: PortalFeedback = {
+    ...input,
+    comment: input.comment.trim(),
+    id: `fb_${Date.now()}`,
+    submittedAt: new Date().toISOString(),
+  };
+  getDb().feedback.push(feedback);
+  persist();
+  return respond(feedback);
 }
 
 // --- Demo helpers ---

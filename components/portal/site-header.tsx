@@ -6,6 +6,8 @@ import { initials } from "@/lib/format";
 import type { Parent } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+import { HelpButton } from "./help-dialog";
+
 type DemoView = "returning" | "new";
 
 export function SiteHeader({ parent, view }: { parent?: Parent; view: DemoView }) {
@@ -16,14 +18,15 @@ export function SiteHeader({ parent, view }: { parent?: Parent; view: DemoView }
           <div className="flex size-9 items-center justify-center rounded-lg bg-brand-gold">
             <Star className="size-5 fill-brand-slate text-brand-slate" />
           </div>
-          <div className="leading-tight">
+          <div className="hidden leading-tight sm:block">
             <p className="font-heading text-sm font-semibold">National Math Stars</p>
             <p className="text-xs text-white/60">Parent Portal</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <DemoSwitch view={view} />
+          <HelpButton view={view} />
           {parent && (
             <div className="flex items-center gap-3">
               <span className="hidden text-sm text-white/80 sm:inline">
