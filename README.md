@@ -3,6 +3,9 @@
 A self-service portal prototype for National Math Stars families, built as a two-hour work sample.
 
 **Live:** https://nms-portal.vercel.app
+**Build video:** [Unedited screen recording of the two-hour build](https://drive.google.com/file/d/1Kuz_ynzuMgOTnbrE3ZI6FqxX1QyS3EMn/view?usp=sharing)
+
+Two edits were made after the recorded session: demo dates now move with the calendar so the demo stays current, and the original brief in `spec.md` was replaced with a paraphrased summary.
 
 You're signed in as the Delgado family. Sofia is a 5th-grade Voyager Star in rural Ohio. All data is dummy data.
 
