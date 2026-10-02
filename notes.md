@@ -1,1 +1,48 @@
 # my notes here, imporvements, etc...
+- data layer: lib/types.ts (types), lib/seed.ts (dummy data), lib/data.ts (async API w/ fake latency, localStorage persistence) — swap internals for Zoho / Ramp / QuickBooks calls later, UI stays the same
+- shadcn generated carousel.tsx trips the react-hooks/set-state-in-effect lint rule (upstream code)
+- seed dates are pinned to fall 2026; overdue/upcoming logic uses the real clock, so dates may need shifting for later demos
+- ui: single page (app/page.tsx -> components/portal/portal.tsx) w/ tabs; Star banner up top; edit dialogs reuse one EditDialog (flat string fields) + toast on save
+- improvement: tabs aren't in the URL yet (refresh always lands on Progress) — could move to routes or ?tab=
+- multi-Star families — data model already supports it (Family.stars[]), but the UI only shows stars[0]
+    - how common? unknown — open question for Ilana / the Zoho data. Stars are selected individually, but math talent often runs in families, so siblings both qualifying is plausible (and more likely as cohorts accumulate year over year)
+    - why it matters even if rare: budget — is it per family or per Star? checklist items, events/RSVPs, and mentors are mostly per Star, so the portal needs a Star switcher (or per-Star sections) the moment one family has two
+    - how I'd answer it: count families with 2+ Stars in Zoho; ask whether siblings share a budget
+    - next step: Star switcher in the banner (avatar row), scope progress/checklist/events to the selected Star
+- attention badges: each checklist item has an `area` (progress/family/mentor/budget/events); tab badge = open required items overdue or due within 14 days (red if any overdue, gold if just due soon); each tab shows a "Needs your attention" strip w/ Open form / Mark done
+- mentor tab: Star's mentor card, schedule (30-min slots, next 2 weeks, generated from today), message thread, NMS team (family coordinator), previous mentors
+    - booking auto-completes the "schedule check-in" to-do (`completesWhen: "mentor-meeting-scheduled"`) -> badge clears
+    - real version: slots would come from the mentor's actual calendar (Calendly / Google Calendar), messages -> Zoho or email
+- open question: budget to-do (Chromebook receipts) has area "budget" but no Budget tab yet — badge will light up once it exists
+- redesign: Home tab is the default — "Your to-dos" (family's half of the relationship) + "Our commitments to you" (NMS staff's half), with Coming up + budget glance on the side
+    - checklist: progress bar (done / total), overdue first w/ reminder counts, top 4 then "show more", completed collapsed, undo toast
+    - staff follow-ups: named owner + due date; "Waiting on you" when blocked by a family to-do (unblocks live when they check it off), "Running late" + "Ask for an update" when NMS is overdue — accountability both directions
+    - the real version: staff see the mirror image (their follow-ups + which families are behind) — internal staff view is a natural next step
+- Family info moved to last tab — rarely changes after onboarding
+- Progress history capped at 5 most recent w/ "Show all"
+- question: should the "Family info" badge exist? the media release form is tagged family-area; may belong on Home only
+- pinbook (spec "could" item): 18 pins across Math / Science / Technology / Engineering / Community; earned = shiny enamel medallion, in-progress = progress ring, locked = dashed "mystery" pin; "Almost there" callout; area filter; detail dialog w/ requirements + who verified
+    - pins earned since the last visit get a NEW ribbon + shine; Pinbook tab shows "2 new" (gold = good news, never red)
+    - Q: who checks off requirements — mentor only, or can families submit evidence (photo/upload) for review? I assumed mentor-verified
+- infrequent-use design (families check in weekly/biweekly):
+    - lead with "Since your last visit" digest (new pins, mentor messages, things NMS finished) — visit = gap of 6h+; stored lastVisit
+    - status + next steps above the fold; nothing hidden behind memory (absolute dates + relative "overdue by", named owners)
+    - stable labeled tabs; tab state in URL (?tab=mentor) so email/SMS nudges can deep-link
+    - next: the portal is the destination, but email/SMS digests are the trigger — weekly "here's what changed + 1 thing to do" email linking to ?tab=
+- aligned w/ nationalmathstars.org (Oct 2026):
+    - programs: Math Awards (gr 2-3 recognition), Pathfinder (parent-led, advising + aid pool, no per-family budget), Voyager (fully funded, high-need: annual family budget, weekly math mentor sessions, monthly Family Advisor, Tech Welcome Pack, 1 funded summer camp/yr, Oct Welcome Weekend, quarterly virtual events)
+    - => demo family is now Voyager (budget/mentor/advisor features only make sense there); moved from KY to rural OH (Voyager advisors are Texas + Midwest)
+    - roles now match NMS titles: Math Mentor, Family Advisor (Midwest), Finance & Operations Associate
+    - budget = STEM enrichment only (chess, robotics, memberships, equipment); courses + camp paid by NMS directly; $2,500/yr is my guess — Q for Ilana
+    - Q: what would a Pathfinder family's portal look like? no budget card; "aid requests" instead; more self-serve recommendations (parent-led)
+    - Q: is Family Advisor monthly meeting scheduled by family or advisor? (portal only schedules with the math mentor right now)
+- pins trimmed 18 -> 10 (4 earned, 3 in progress, 3 locked), STEM areas only
+- progress tab: stats are now the filters; timeline has more left whitespace
+- usability audit (vs spec + "is this overwhelming?"):
+    - before: ~10 alarm signals above the fold (5 tab badges, 3 red; red rows; "Overdue by 17 days"; "Reminded 2x"; "Running late"); same to-do counted 3x (Home badge, tab badge, per-tab strip); ~9 equal-weight buttons, no obvious first action; Home = 3.3 phone screens
+    - fixes: one gold count on Home only (Pinbook "new" is good news); removed per-tab attention strips; amber "Past due · was due Sep 15" instead of red; hid reminder counts (staff info)
+    - "what do I do?" -> "Start here" card: one to-do, time estimate, one primary button + "I've done this" + hint that forms open in a new tab
+    - "since last visit" -> one row of chips; NMS commitments collapsed to a one-line summary
+    - spec gaps closed: "what budget was spent on" (spending dialog: by category + every purchase); "browse events + RSVP" (events dialog; RSVP updates spots + "You're signed up for")
+    - result: Home 1625px -> 1119px desktop, 2769px -> 1869px phone; zero red on screen
+    - remaining risk: "I've done this" relies on honor system; real version should auto-complete when the Zoho form is submitted (webhook)
