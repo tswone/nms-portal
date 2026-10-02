@@ -61,3 +61,5 @@
         - realistically both: webhooks for fast-changing items (to-dos, RSVPs, messages), scheduled sync as a safety net so nothing drifts
         - portal writes (address edits, RSVPs) go back to Zoho via its API; the cache updates from the webhook that follows, so there's one source of truth
     - lib/data.ts is already shaped for this: every function is async, so swapping localStorage for API calls + a cache doesn't change the UI
+- connected portal <-> nationalmathstars.org: footer on every page (data pledge, Learn more links, Need help), plus in-context links (welcome page -> Voyager program + Star Stories; Mentor tab -> Meet the whole NMS team)
+    - pledge wording only restates NMS's published privacy policy (no marketing sharing, parental consent under 13, privacy contact operations@) — Q: legal/ops should review; a portal holding grades + finances probably wants a portal-specific privacy notice (FERPA-adjacent school records, who on staff can see what)

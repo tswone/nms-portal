@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   CalendarCheck,
   CalendarPlus,
+  ExternalLink,
   Mail,
   MapPin,
   MessageSquare,
@@ -273,6 +274,15 @@ export function MentorTab({
                   </div>
                 </div>
               ))}
+              <a
+                href="https://nationalmathstars.org/team/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium underline-offset-4 hover:underline"
+              >
+                Meet the whole NMS team
+                <ExternalLink className="size-3.5" />
+              </a>
             </CardContent>
           </Card>
         )}

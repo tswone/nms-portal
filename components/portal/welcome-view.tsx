@@ -6,6 +6,7 @@ import {
   CalendarHeart,
   Check,
   Clock,
+  ExternalLink,
   GraduationCap,
   Laptop,
   Mail,
@@ -129,6 +130,26 @@ export function WelcomeView() {
           <p className="max-w-2xl text-white/80 sm:text-lg">
             {STAR.firstName} is one of our newest Stars. This portal is your home base for the next
             ten years. For now, there are just a few things to do, and we&apos;ll handle the rest.
+          </p>
+          <p className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+            <a
+              href="https://nationalmathstars.org/voyager-program/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 font-medium text-brand-gold underline-offset-4 hover:underline"
+            >
+              How Voyager Stars works
+              <ExternalLink className="size-3.5" />
+            </a>
+            <a
+              href="https://nationalmathstars.org/star-stories/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 font-medium text-brand-gold underline-offset-4 hover:underline"
+            >
+              Read stories from other Star families
+              <ExternalLink className="size-3.5" />
+            </a>
           </p>
         </div>
       </section>
