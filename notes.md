@@ -46,3 +46,18 @@
     - spec gaps closed: "what budget was spent on" (spending dialog: by category + every purchase); "browse events + RSVP" (events dialog; RSVP updates spots + "You're signed up for")
     - result: Home 1625px -> 1119px desktop, 2769px -> 1869px phone; zero red on screen
     - remaining risk: "I've done this" relies on honor system; real version should auto-complete when the Zoho form is submitted (webhook)
+- next step: replace the honor system with system-confirmed actions + webhook-driven data
+    - honor system today: "I've done this" / checkboxes, pin steps, RSVPs, and NMS commitments are all marked by hand in the portal
+    - checklist items should be confirmed by the system that owns the action, not by a click:
+        - forms (media release, agreement, report card upload) -> Zoho Forms / e-sign submission webhook marks the item done
+        - receipts -> Ramp/QuickBooks receipt match marks "submit receipts" done and unblocks the reimbursement commitment
+        - mentor/advisor calls -> calendar booking webhook (Calendly / Google Calendar) marks "schedule a call" done
+        - event RSVPs -> event platform webhook confirms registration
+        - "I've done this" stays only as a fallback ("tell us you've done it") that flags the item for staff to verify, not as the source of truth
+    - portal data also needs webhooks (or a refreshed cache) to stay current:
+        - Zoho CRM is the source of truth for family info, checklist, mentors, commitments; Ramp/QuickBooks for budget
+        - option A: webhooks from Zoho/Ramp push changes into the portal's store as they happen
+        - option B: a cache (DB or KV) refreshed from the CRM on a schedule (e.g. every 15 min) + on-demand refresh when a family loads the portal
+        - realistically both: webhooks for fast-changing items (to-dos, RSVPs, messages), scheduled sync as a safety net so nothing drifts
+        - portal writes (address edits, RSVPs) go back to Zoho via its API; the cache updates from the webhook that follows, so there's one source of truth
+    - lib/data.ts is already shaped for this: every function is async, so swapping localStorage for API calls + a cache doesn't change the UI
