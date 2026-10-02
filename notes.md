@@ -76,3 +76,10 @@
         - Vercel Cron for scheduled syncs; webhook endpoints as Next.js route handlers; portal writes go to the Zoho API first
     - swap is contained: lib/data.ts functions become server actions / route handlers backed by Prisma, UI components unchanged
     - Q: hosting data in Neon/Clerk = more vendors holding family data — needs a data processing review alongside the privacy-notice question above
+- scheduling (mentor calls, Family Advisor check-ins) — reuse before building:
+    - first choice: Zoho's own scheduling (Zoho Bookings, part of the Zoho suite) if NMS's Zoho plan includes it — Q for Ilana/ops: do staff already use it?
+        - keeps availability + booked meetings next to the family record in Zoho CRM; portal shows staff availability and books through its API; a booking webhook auto-completes "schedule a call" to-dos
+        - meeting links can come from Zoho Meeting or a connected Google Meet / Zoom account — use whatever staff already use
+    - fallback: Google Calendar + Google Meet (if NMS runs on Google Workspace)
+        - read staff free/busy from Google Calendar, create the event with a Meet link via the Calendar API, write the meeting back to the Zoho record
+    - either way: the portal's slot picker (mentor tab) stays the same UI; only getMentorAvailability / scheduleMeeting in lib/data.ts change
